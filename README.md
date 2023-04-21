@@ -10,7 +10,13 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pyngres
 pip install pyngres
 ```
 
+(Note for **Conda** and **Miniconda** users: there is an as-yet undiagnosed problem that prevents **pip** from properly resolving the dependency on **loguru**. As a workaround install loguru before installing pyngres.)
+
 ## Usage
+
+```python
+from pyngres import *
+```
 
 **Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
 is your installation identifier (usually **II**). Example:
@@ -23,13 +29,9 @@ is your installation identifier (usually **II**). Example:
 
 Set the `IIAPI_DEV_MODE` environment variable or call `loguru.enable('pyngres')` in your application code to start pyngres API tracing using [Loguru](https://loguru.readthedocs.io/en/stable/).
 
-```python
-from pyngres import *
-```
-
 ## API
 
-See [OpenAPI User Guide](https://docs.actian.com/ingres/11.2/#page/OpenAPIUser/OpenAPIUser_Title.htm) for details on the use the Ingres OpenAPI.
+See [OpenAPI User Guide](https://docs.actian.com/ingres/11.2/#page/OpenAPIUser/OpenAPIUser_Title.htm) for details on the use the Ingres OpenAPI. The following API functions are supported by pyngres:
 
 - `IIapi_abort()`
 - `IIapi_autocommit()`
