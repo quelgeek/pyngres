@@ -15,7 +15,7 @@ pip install pyngres
 ## Usage
 
 ```python
-from pyngres import *
+import pyngres as ii
 ```
 
 **Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
