@@ -56,10 +56,10 @@ arrays of bytes, not Python strings. e.g. ```qry = b'SELECT * FROM foo'```.
 Some of the older C examples use the default level 1 API. It is not
 obvious from those examples that later versions of the API return an
 **envHandle** that has to be passed to the **IIapi_connect()** function using 
-the **connHandle** member of the **IIAPI_CONNPARM** object. Because that is an 
-important "gotcha" if you rely on the examples we have adapted most of
+the **connHandle** member of the **IIAPI_CONNPARM** object. That is an 
+important "gotcha" if you rely on the examples. We have adapted most of
 our Python examples to show the way you would really connect today. We choose
-**IIAPI_VERSION_11** explicitly. **IIAPI_VERSION** would select the latest version.
+**IIAPI_VERSION_11** explicitly. (**IIAPI_VERSION** would select the latest version.)
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
