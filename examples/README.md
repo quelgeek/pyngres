@@ -58,7 +58,8 @@ obvious from those examples that later versions of the API return an
 envHandle that has to be passed to the IIapi_connect() function using 
 the connHandle member of the IIAPI_CONNPARM object. Because that is an 
 important "gotcha" if you rely on the examples we have adapted most of
-our Python examples to show the way you would really connect today.
+our Python examples to show the way you would really connect today. We choose
+IIAPI_VERSION_11 explicitly. IIAPI_VERSION would select the latest version.
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
