@@ -53,10 +53,12 @@ python apisconn.py demobase
 Ingres expects queries in the form of C strings (i.e. NUL-terminated
 arrays of bytes, not Python strings. e.g. ```qry = b'SELECT * FROM foo'```.
 
-Some of the original C examples use the default level 1 API. It is not
+Some of the older C examples use the default level 1 API. It is not
 obvious from those examples that later versions of the API return an
 envHandle that has to be passed to the IIapi_connect() function using 
-the connHandle member of the IIAPI_CONNPARM object.
+the connHandle member of the IIAPI_CONNPARM object. Because that is an 
+important "gotcha" if you rely on the examples we have adapted most of
+our Python examples to show the way you would really connect today.
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
@@ -67,7 +69,7 @@ will return the transaction handle as their value.
 Because pyngres invokes the dynamic OpenAPI, standard OpenAPI and GCA tracing
 work in the usual way.
 
-The example Python code we supply here is a slavish transliteration of the 
+The example Python code we supply here is a mostly slavish[^1] transliteration of the 
 original C code. We have followed the original code as closely as possible
 to make it relatively easy to do a side-by-side comparison with the original
 examples. In multiple ways the resulting Python code is not Pythonic and should
@@ -90,3 +92,5 @@ We don't use context managers in these examples. (Obvious situations where
 a context manager makes sense are starting and ending Ingres sessions;
 starting and committing transactions, and changing and restoring lockmodes.)
 
+[^1]: "mostly slavish" meaning: apart from the above-noted effort to illustrate
+the use of the envHandle when calling IIapi_connect().
