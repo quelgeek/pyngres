@@ -1,6 +1,6 @@
 # pyngres
 
-pyngres is a Python package that wraps the Actian OpenIngres API.
+pyngres is a Python package that wraps the *Actian OpenIngres API*.
 
 ## Example Code
 
@@ -26,15 +26,15 @@ apisblob.py  apiscopy.py  apisinit.py  apisprgt.py  apisroll.py
 ## Running Example Code
 
 Our examples expect Python 3.6 or higher. However, if you prefer to use an
-older version you should have no difficulty making the required changes to 
-the examples.
+older version you should have no difficulty making the necessary changes to 
+run the examples.
 
 You will need to install pyngres into your environment.
 ```
 pip install pyngres
 ```
 
-The pyngres library has a dependency on loguru. pip will usually resolve
+The pyngres library has a dependency on loguru. **pip** will usually resolve
 it automatically but there is a known problem when using conda/miniconda
 which prevents it from installing. The workaround is to install loguru
 first, before installing pyngres.
@@ -49,17 +49,17 @@ demobase:
 python apisconn.py demobase
 ```
 
-## Important Notes
+## Important Notes About the Example Code
 Ingres expects queries in the form of C strings (i.e. NUL-terminated
 arrays of bytes, not Python strings. e.g. ```qry = b'SELECT * FROM foo'```.
 
 Some of the older C examples use the default level 1 API. It is not
 obvious from those examples that later versions of the API return an
-envHandle that has to be passed to the IIapi_connect() function using 
-the connHandle member of the IIAPI_CONNPARM object. Because that is an 
+**envHandle** that has to be passed to the **IIapi_connect()** function using 
+the **connHandle** member of the **IIAPI_CONNPARM** object. Because that is an 
 important "gotcha" if you rely on the examples we have adapted most of
 our Python examples to show the way you would really connect today. We choose
-IIAPI_VERSION_11 explicitly. IIAPI_VERSION would select the latest version.
+**IIAPI_VERSION_11** explicitly. **IIAPI_VERSION** would select the latest version.
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
