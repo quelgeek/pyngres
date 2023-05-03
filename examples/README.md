@@ -50,6 +50,16 @@ python apisconn.py demobase
 ```
 
 ## Important Notes
+Some of the original C examples use the default level 1 API. It is not
+obvious from those examples that later versions of the API return an
+envHandle that has to be passed to the IIapi_connect() function using 
+the connHandle member of the IIAPI_CONNPARM object.
+
+It is important to remember that Python objects created within a scope get 
+garbage-collected when control passes out of that scope. That is why some of
+the Python code explicitly returns a value where the original C code relied 
+on side-effects. For example, functions that initiate a transaction 
+will return the transaction handle as their value.
 
 Because pyngres invokes the dynamic OpenAPI, standard OpenAPI and GCA tracing
 work in the usual way.
