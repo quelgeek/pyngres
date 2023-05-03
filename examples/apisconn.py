@@ -7,6 +7,7 @@
 ##  Description:
 ##  	Demonstrates using IIapi_connect(),IIapi_setConnectParam(),
 ##  	IIapi_disconnect() and IIapi_abort()
+##      Modeled on code supplied by Actian in II_SYSTEM/ingres/demo/api.
 ##
 ##  Following actions are demonstrated
 ##  	Connect (no conn parms)
@@ -36,11 +37,12 @@ def IIdemo_init():
     if status != IIAPI_ST_SUCCESS:
         print(f'Error: {status=} ({IIAPI_ST_MSG[status]})')
         quit()
-
     return inp.in_envHandle
 
 
 def IIdemo_term(envHandle):
+    '''Terminate API access'''
+
     rep = IIAPI_RELENVPARM()
     rep.re_envHandle = envHandle
     print('IIdemo_term: releasing environment resources')
