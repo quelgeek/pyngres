@@ -50,6 +50,9 @@ python apisconn.py demobase
 ```
 
 ## Important Notes
+Ingres expects queries in the form of C strings (i.e. NUL-terminated
+arrays of bytes, not Python strings. e.g. ```qry = b'SELECT * FROM foo'```.
+
 Some of the original C examples use the default level 1 API. It is not
 obvious from those examples that later versions of the API return an
 envHandle that has to be passed to the IIapi_connect() function using 
