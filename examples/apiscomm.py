@@ -50,8 +50,9 @@ def IIdemo_conn(target, envHandle):
     cop.co_genParm.gp_callback = None
     cop.co_genParm.gp_closure = None
     cop.co_target = target
-    cop.co_connHandle = None
+    cop.co_connHandle = envHandle
     cop.co_tranHandle = None
+    cop.co_type = IIAPI_CT_SQL
     cop.co_username = None
     cop.co_password = None
     cop.co_timeout = -1
