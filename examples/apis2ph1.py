@@ -38,7 +38,7 @@ def IIdemo_init():
     if status != IIAPI_ST_SUCCESS:
         print(f'{status=} ({IIAPI_ST_MSG[status]})')
         quit()
-    envHandle inp.envHandle
+    envHandle = inp.in_envHandle
     return envHandle
 
 
