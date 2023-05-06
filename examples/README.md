@@ -93,5 +93,7 @@ We don't use context managers in these examples. (Obvious situations where
 a context manager makes sense are starting and ending Ingres sessions;
 starting and committing transactions, and changing and restoring lockmodes.)
 
+There is defensive checking where try-except would be more Pythonic.
+
 [^1]: "mostly slavish" meaning: apart from the above-noted effort to illustrate
 the use of the envHandle when calling IIapi_connect().
