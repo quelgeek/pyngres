@@ -39,6 +39,13 @@ it automatically but there is a known problem when using conda/miniconda
 which prevents it from installing. The workaround is to install loguru
 first, before installing pyngres.
 
+To facilitate the use of VARCHARs in some of the examples we have
+provided a (crude) varchar.py module. The varchar.py module has a dependency on
+**multipledispatch**, which you will need to install.
+```
+pip install multipledispatch
+```
+
 You will need to have a running Ingres installation available, your local
 Ingres environment set up, and a local copy of the OpenAPI. You should have
 a database available.
