@@ -20,6 +20,7 @@
 ##      python apisprbr.py [vnode::]dbname[/server_class]
 
 
+from varchar import *
 from pyngres import *
 import ctypes
 import struct
@@ -176,15 +177,6 @@ def IIdemo_query(connHandle, tranHandle, queryText):
     return tranHandle
 
 
-def devarchar(vchar):
-    '''convert a returned varchar to a list of bytes'''
-
-    ##  the first two bytes contain the length of the data
-    length = struct.unpack_from('h', vchar)[0]
-    value = vchar[2 : length + 2]
-    return value
-
-
 ##  this is the main body of the demonstration code
 argv = sys.argv
 script = argv[0]
@@ -335,7 +327,7 @@ gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 2
 gcp.gc_columnData = dataArrayPtr
-name = ctypes.c_buffer(258)
+name = varchar(256)
 count = ctypes.c_int()
 gcp.gc_columnData[0].dv_value = ctypes.addressof(name)
 gcp.gc_columnData[1].dv_value = ctypes.addressof(count)
@@ -348,9 +340,6 @@ while not gcp.gc_genParm.gp_completed:
     IIapi_wait(wtp)
 
 if gcp.gc_genParm.gp_status < IIAPI_ST_NO_DATA:
-    ptr = gcp.gc_columnData[0].dv_value
-    value = ctypes.string_at(ptr, 258)
-    name = devarchar(value)
     print(f'table {name} has {count.value} columns')
 
 ##  get procedure results
