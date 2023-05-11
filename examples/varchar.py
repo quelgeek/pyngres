@@ -28,23 +28,32 @@ def _varchar(value, length, capacity):
     ##  capacity is the declared size of the varchar;
     ##  length is the number of bytes in the value
 
-    ##  assert capacity >= 1 and 0 <= length < capacity
+    ##  assert capacity >= 1 and 0 <= length <= capacity
 
     class Varchar(ctypes.Structure):
         _fields_ = [
             ('_length', ctypes.c_ushort),
             ('_value', ctypes.c_char * capacity)]
 
+
         @property
         def value(self):
             return self._value[: self._length]
+
 
         def as_str(self):
             v = self._value[: self._length]
             return v.decode()
 
+
+        def __repr__(self):
+            repr = f'varchar(\'{self._value.decode()}\',{self._capacity})'
+            return repr
+
+
         def __str__(self):
             return self.as_str()
+
 
     instance = Varchar()
     instance._length = length
@@ -78,7 +87,7 @@ def varchar(string, size):
 
 @dispatch(int)
 def varchar(size):
-    '''instantiate a sufficiently commodious empty struct for a VARCHAR'''
+    '''instantiate an empty struct for a VARCHAR of specified size'''
 
     _value = b''
     _length = 0
