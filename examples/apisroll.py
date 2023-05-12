@@ -27,14 +27,11 @@ def IIdemo_init():
     inp = IIAPI_INITPARM()
 
     print('IIdemo_init: initializing API')
-    inp.in_version = IIAPI_VERSION_2
+    inp.in_version = IIAPI_VERSION_11
     inp.in_timeout = -1
 
     IIapi_initialize(inp)
-    status = inp.in_status
-    if status != IIAPI_ST_SUCCESS:
-        print(f'{status=} ({IIAPI_ST_MSG[status]})')
-        quit()
+
     envHandle = inp.in_envHandle
     return envHandle
 

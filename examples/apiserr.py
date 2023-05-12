@@ -293,10 +293,15 @@ def IIdemo_disconn(connHandle):
     return connHandle
 
 
-def IIdemo_term():
+def IIdemo_term(envHandle):
     '''Terminate API access'''
 
+    rep = IIAPI_RELENVPARM()
     tmp = IIAPI_TERMPARM()
+
+    rep.re_envHandle = envHandle
+    print('IIdemo_term: releasing environment resources')
+    IIapi_releaseEnv(rep)
 
     print('IIdemo_term: shutting down API')
     IIapi_terminate(tmp)
@@ -340,5 +345,5 @@ tranHandle = IIdemo_query(connHandle, tranHandle, invalidText)
 
 IIdemo_rollback(tranHandle)
 IIdemo_disconn(connHandle)
-IIdemo_term()
+IIdemo_term(envHandle)
 quit()

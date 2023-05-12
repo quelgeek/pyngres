@@ -29,22 +29,23 @@ def IIdemo_init():
     inp.in_timeout = -1
     IIapi_initialize(inp)
     status = inp.in_status
-    if status != IIAPI_ST_SUCCESS:
-        print(f'Error: {status=} ({IIAPI_ST_MSG[status]})')
-        quit()
-    return inp.in_envHandle
+
+    envHandle = inp.in_envHandle
+    return envHandle
 
 
-def IIdemo_term():
+def IIdemo_term(envHandle):
     '''Terminate API access'''
 
+    rep = IIAPI_RELENVPARM()
     tmp = IIAPI_TERMPARM()
 
-    print('IIdemo_init: shutting down API')
+    rep.re_envHandle = envHandle
+    print('IIdemo_term: releasing environment resources')
+    IIapi_releaseEnv(rep)
+
+    print('IIdemo_term: shutting down API')
     IIapi_terminate(tmp)
-    status = tmp.tm_status
-    if status >= IIAPI_ST_ERROR:
-        print(f'{status=} ({IIAPI_ST_MSG[status]})')
 
 
 def IIdemo_conn(target, envHandle):
@@ -200,5 +201,5 @@ if status != IIAPI_ST_SUCCESS:
     quit()
 
 dcp = IIdemo_disconn(connHandle)
-tmp = IIdemo_term()
+tmp = IIdemo_term(envHandle)
 quit()

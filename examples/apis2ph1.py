@@ -34,10 +34,7 @@ def IIdemo_init():
     inp.in_timeout = -1
     print('IIdemo_init: initializing API')
     IIapi_initialize(inp)
-    status = inp.in_status
-    if status != IIAPI_ST_SUCCESS:
-        print(f'{status=} ({IIAPI_ST_MSG[status]})')
-        quit()
+    
     envHandle = inp.in_envHandle
     return envHandle
 

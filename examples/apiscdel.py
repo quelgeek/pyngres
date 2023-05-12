@@ -37,11 +37,9 @@ def IIdemo_init():
     inp.in_version = IIAPI_VERSION_11
     inp.in_timeout = -1
     IIapi_initialize(inp)
-    status = inp.in_status
-    if status != IIAPI_ST_SUCCESS:
-        print(f'{status=} ({IIAPI_ST_MSG[status]})')
-        quit()
-    return inp.in_envHandle
+
+    envHandle = inp.in_envHandle
+    return envHandle
 
 
 def IIdemo_conn(target, envHandle):
@@ -273,10 +271,16 @@ def IIdemo_disconn(connHandle):
     return None
 
 
-def IIdemo_term():
+def IIdemo_term(envHandle):
     '''Terminate API access'''
 
+    rep = IIAPI_RELENVPARM()
     tmp = IIAPI_TERMPARM()
+
+    rep.re_envHandle = envHandle
+    print('IIdemo_term: releasing environment resources')
+    IIapi_releaseEnv(rep)
+
     print('IIdemo_term: shutting down API')
     IIapi_terminate(tmp)
 
@@ -475,4 +479,4 @@ while not clp.cl_genParm.gp_completed:
 
 tranHandle = IIdemo_rollback(tranHandle)
 IIdemo_disconn(connHandle)
-IIdemo_term()
+IIdemo_term(envHandle)

@@ -36,12 +36,17 @@ def IIdemo_init():
     return envHandle
 
 
-def IIdemo_term():
+def IIdemo_term(envHandle):
     '''Terminate API access'''
 
+    rep = IIAPI_RELENVPARM()
     tmp = IIAPI_TERMPARM()
 
+    rep.re_envHandle = envHandle
     print('IIdemo_term: releasing environment resources')
+    IIapi_releaseEnv(rep)
+
+    print('IIdemo_term: shutting down API')
     IIapi_terminate(tmp)
 
 
@@ -226,6 +231,7 @@ tranHandle = None
 procHandle = None
 tranHandle = IIdemo_query(connHandle, tranHandle, createTBLText)
 tranHandle = IIdemo_query(connHandle, tranHandle, procText)
+
 for row in range(DEMO_TABLE_SIZE):
     ##  execute procedure
     print('apisproc: execute procedure')
@@ -344,5 +350,5 @@ for row in range(DEMO_TABLE_SIZE):
 
 IIdemo_rollback(tranHandle)
 IIdemo_disconn(connHandle)
-IIdemo_term()
+IIdemo_term(envHandle)
 quit()

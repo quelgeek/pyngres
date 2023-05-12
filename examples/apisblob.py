@@ -34,14 +34,11 @@ def IIdemo_init():
     inp = IIAPI_INITPARM()
 
     print('IIdemo_init: initializing API')
-    inp.in_version = IIAPI_VERSION_2
+    inp.in_version = IIAPI_VERSION_11
     inp.in_timeout = -1
 
     IIapi_initialize(inp)
-    status = inp.in_status
-    if status != IIAPI_ST_SUCCESS:
-        print(f'{status=} ({IIAPI_ST_MSG[status]})')
-        quit()
+        
     envHandle = inp.in_envHandle
     return envHandle
 
@@ -50,11 +47,12 @@ def IIdemo_term(envHandle):
     '''Terminate API access'''
 
     rep = IIAPI_RELENVPARM()
+    tmp = IIAPI_TERMPARM()
+
     rep.re_envHandle = envHandle
     print('IIdemo_term: releasing environment resources')
     IIapi_releaseEnv(rep)
 
-    tmp = IIAPI_TERMPARM()
     print('IIdemo_term: shutting down API')
     IIapi_terminate(tmp)
 
@@ -62,9 +60,9 @@ def IIdemo_term(envHandle):
 def IIdemo_conn(target, envHandle):
     '''open connection with target Database'''
 
+    cop = IIAPI_CONNPARM()
     wtp = IIAPI_WAITPARM()
     wtp.wt_timeout = -1
-    cop = IIAPI_CONNPARM()
 
     print('IIdemo_conn: establishing connection')
     cop.co_genParm.gp_callback = None
@@ -134,6 +132,7 @@ def IIdemo_query(connHandle, tranHandle, queryText):
         print(f'{status=} ({IIAPI_ST_MSG[status]})')
         quit()
 
+    ##  Return transaction handle
     tranHandle = qyp.qy_tranHandle
     stmtHandle = qyp.qy_stmtHandle
 
@@ -155,11 +154,11 @@ def IIdemo_query(connHandle, tranHandle, queryText):
     while not clp.cl_genParm.gp_completed:
         IIapi_wait(wtp)
 
-    return connHandle, tranHandle
+    return tranHandle
 
 
 def IIdemo_rollback(tranHandle):
-    '''rollback current transaction'''
+    '''rollback current transaction and reset transaction handle'''
 
     rbp = IIAPI_ROLLBACKPARM()
     wtp = IIAPI_WAITPARM()
@@ -172,10 +171,12 @@ def IIdemo_rollback(tranHandle):
     rbp.rb_savePointHandle = None
 
     IIapi_rollback(rbp)
+    
     while not rbp.rb_genParm.gp_completed:
         IIapi_wait(wtp)
 
-    return None
+    tranHandle = None
+    return tranHandle
 
 
 def IIdemo_checkError(genParm):
@@ -434,7 +435,7 @@ tranHandle = None
 createTBLText = b'''CREATE TABLE api_demo ( name char(20) NOT NULL, 
 				blobdata long varchar, 
 				comment char(20))'''
-connHandle, tranHandle = IIdemo_query(connHandle, tranHandle, createTBLText)
+tranHandle = IIdemo_query(connHandle, tranHandle, createTBLText)
 
 print(f'{script}: insert one row')
 IIdemo_insert(connHandle, tranHandle)

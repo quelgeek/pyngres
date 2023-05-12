@@ -197,7 +197,7 @@ nrows = gcp.gc_rowsReturned
 for i in range(nrows):
     columName = gdp.gd_descriptor[0].ds_columnName
     value = ctypes.string_at(varvalue[i], size=256)
-    print(f'{columName=} {value}')
+    print(f'{columName} = {value}')
 
 ##  fetch result info
 gqp.gq_genParm.gp_callback = None
