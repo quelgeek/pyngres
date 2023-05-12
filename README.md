@@ -4,7 +4,7 @@ Pyngres is a Python wrapper for the Actian Ingres OpenAPI.
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pyngres.
+Use [pip](https://pip.pypa.io/en/stable/) to install pyngres.
 
 ```bash
 pip install pyngres
