@@ -10,8 +10,6 @@ Use [pip](https://pip.pypa.io/en/stable/) to install pyngres.
 pip install pyngres
 ```
 
-(Note for **Conda** and **Miniconda** users: there is an as-yet undiagnosed problem that prevents **pip** from properly resolving the dependency on **loguru**. As a workaround install loguru before installing pyngres.)
-
 ## Usage
 
 ```python
