@@ -23,6 +23,18 @@ directly transferable.
 import pyngres as ii
 ```
 
+**Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
+is your installation identifier (usually **II**). Example:
+
+```
+. ~/.ingIIsh
+```
+
+**Windows:** your Ingres installation will usually be initialized already.
+
+Set the `IIAPI_DEV_MODE` environment variable or call `loguru.enable('pyngres')` in your application code to start pyngres API tracing using [Loguru](https://loguru.readthedocs.io/en/stable/).
+
+
 ### pyngres.asyncio
 
 The OpenAPI is intrinsically asynchronous. The API sends a request to a 
@@ -63,17 +75,6 @@ any changes.
 ```python
 import pyngres.blocking as ii
 ```
-
-**Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
-is your installation identifier (usually **II**). Example:
-
-```
-. ~/.ingIIsh
-```
-
-**Windows:** your Ingres installation will usually be initialized already.
-
-Set the `IIAPI_DEV_MODE` environment variable or call `loguru.enable('pyngres')` in your application code to start pyngres API tracing using [Loguru](https://loguru.readthedocs.io/en/stable/).
 
 ## API
 
