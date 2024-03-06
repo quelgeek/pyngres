@@ -4,16 +4,64 @@ Pyngres is a Python wrapper for the Actian Ingres OpenAPI.
 
 ## Installation
 
-Use [pip](https://pip.pypa.io/en/stable/) to install pyngres.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pyngres.
 
 ```bash
 pip install pyngres
 ```
 
+(Note for **Conda** and **Miniconda** users: there is an as-yet undiagnosed problem that prevents **pip** from properly resolving the dependency on **loguru**. As a workaround install loguru before installing pyngres.)
+
 ## Usage
+
+The pyngres package contains three modules. The pyngres module is a set of
+Python bindings for the Actian OpenAPI. Anyone familiar with the OpenAPI and
+with Python programming will find their expertise using the OpenAPI in C is 
+directly transferable.
 
 ```python
 import pyngres as ii
+```
+
+### pyngres.asyncio
+
+The OpenAPI is intrinsically asynchronous. The API sends a request to a 
+server and then returns to the caller without waiting for the request to 
+be completed. It is up to the programmer to insert calls to IIapiWait() 
+to pass control back to the API so that it can set the gp_completed flag 
+and invoke any callback routine that was requested.
+
+The Python asyncio package provides design patterns and a well-known
+infrastructure that make asynchronous programming more convenient and support
+concurrent execution. The asyncio package facilitates the development of 
+highly responsive event driven applications, such as GUI applications.
+
+The pyngres.asyncio package can be used in place of the bare-bones pyngres
+package. It supports all the same entry points, but all the asynchronous 
+OpenAPI functions are awaitable. They are executed in the asyncio event loop
+concurrently with any other awaitables. (The one exception is the IIapi_await()
+function which does not exist in pyngres.asyncio; it would serve no purpose.)
+
+```python
+import pyngres.asyncio as ii
+```
+
+### pyngres.blocking
+
+OpenAPI applications that have no need to cooperate with other asyncio 
+packages can use the pyngres.blocking package. It is functionally identical
+to the base pyngres package except that all the of the OpenAPI functions 
+block until completion in a platform independent way. This slightly reduces
+the visual clutter of hard-coded loops calling IIapi_wait(), and eliminates
+the risk of omitting a necessary wait loop. 
+
+The pyngres.blocking package includes a null
+implementation of IIapi_wait() so that pyngres.blocking can simply be
+substituted for pyngres in an existing application without requiring 
+any changes. 
+
+```python
+import pyngres.blocking as ii
 ```
 
 **Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
