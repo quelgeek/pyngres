@@ -39,13 +39,6 @@ it automatically but there is a known problem when using conda/miniconda
 which prevents it from installing. The workaround is to install loguru
 first, before installing pyngres.
 
-We have provided a (crude) varchar.py module to facilitate the use of VARCHARs
-in some of the examples. The varchar.py module has a dependency on
-**multipledispatch**, which you will need to install.
-```
-pip install multipledispatch
-```
-
 You will need to have a running Ingres installation available, your local
 Ingres environment set up, and a local copy of the OpenAPI. You should have
 a database available.
@@ -58,7 +51,8 @@ python apisconn.py demobase
 
 ## Important Notes About the Example Code
 Ingres expects queries in the form of C strings (i.e. NUL-terminated
-arrays of bytes, not Python strings. e.g. ```qry = b'SELECT * FROM foo'```.
+arrays of bytes, not Python strings so use e.g. 
+```qry = b'SELECT * FROM foo'```.
 
 Some of the older C examples use the default level 1 API. It is not
 obvious from those examples that later versions of the API return an
@@ -66,7 +60,8 @@ obvious from those examples that later versions of the API return an
 the **connHandle** member of the **IIAPI_CONNPARM** object. That is an 
 important "gotcha" if you rely on the examples. We have adapted most of
 our Python examples to show the way you would really connect today. We choose
-**IIAPI_VERSION_11** explicitly. (**IIAPI_VERSION** would select the latest version.)
+**IIAPI_VERSION_11** explicitly. (Alternatively **IIAPI_VERSION** would select
+the latest version.)
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
@@ -99,8 +94,6 @@ visual clutter.
 We don't use context managers in these examples. (Obvious situations where
 a context manager makes sense are starting and ending Ingres sessions;
 starting and committing transactions, and changing and restoring lockmodes.)
-
-There is defensive checking where try-except would be more Pythonic.
 
 [^1]: "mostly slavish" meaning: apart from the above-noted effort to illustrate
 the use of the envHandle when calling IIapi_connect().
