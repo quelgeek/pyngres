@@ -5,6 +5,7 @@ Python bindings for the Actian Ingres OpenAPI
 '''
 
 
+from functools import wraps
 import ctypes
 from loguru import logger
 import os
@@ -16,13 +17,15 @@ from .IIAPI_PARM import *
 
 
 ##  the IIAPI_DEV_MODE envar puts pyngres in development mode
+_name = __name__
 if 'IIAPI_DEV_MODE' in os.environ:
     IIAPI_DEV_MODE = True
-    logger.warning('running in development mode')
+    logger.warning(f'using {_name} in development mode')
+    logger.info(f'to disable logging messages: logger.disable(\'{_name}\')')
+    logger.info(f'to enable logging messages: logger.enable(\'{_name}\')')
 else:
     IIAPI_DEV_MODE = False
     logger.disable('pyngres')
-    ##  use logger.enable('pyngres') in the client to enable logging
 
 
 ##  load the Ingres OpenAPI using ctypes
@@ -196,13 +199,22 @@ IIapi_xaRollback = bind_function(
 )
 
 
+##  OpenAPI callback factory
+IIAPI_CBFUNC = ctypes.CFUNCTYPE(
+    None, 
+    ctypes.POINTER(ctypes.c_void_p), 
+    ctypes.POINTER(ctypes.c_void_p)
+)
+
+
 def trace(iiapi_func):
     '''decorator to trace (OpenAPI) calls'''
 
+    @wraps(iiapi_func)
     def api_trace(*args, **kwargs):
-        logger.trace(f'calling {iiapi_func.__name__}()...')
+        logger.opt(depth=1).trace(f'calling {iiapi_func.__name__}()...')
         result = iiapi_func(*args, **kwargs)
-        logger.trace(f'... {iiapi_func.__name__} returned')
+        logger.opt(depth=1).trace(f'... {iiapi_func.__name__} returned')
         return result
 
     return api_trace

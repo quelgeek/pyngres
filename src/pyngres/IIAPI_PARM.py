@@ -126,8 +126,8 @@ class IIAPI_MEMBER(IIAPI):
     display_trim = '||  '
 
 
-class IIAPI_GENERIC(object):
-    '''mixin class to return *_genParm, *_connHandle, etc'''
+#class IIAPI_GENERIC(object):
+#    '''mixin class to return *_genParm, *_connHandle, etc'''
 
 class IIAPI_GENPARM(IIAPI_MEMBER):
     '''common parameter member for Ingres OpenAPI'''
