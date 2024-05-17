@@ -1,4 +1,4 @@
-import ctypes
+import ctypes as C
 import os
 import struct
 from loguru import logger
@@ -7,24 +7,24 @@ from .IIAPI_CONSTANTS import *
 
 
 ##  the following are known from iiapidep.h
-II_BOOL = ctypes.c_int  ##  II_BOOL is not what you might guess...
-II_CHAR = ctypes.c_char
-II_FLOAT4 = ctypes.c_float
-II_FLOAT8 = ctypes.c_double
-II_INT = ctypes.c_int
-II_INT1 = ctypes.c_char
-II_INT2 = ctypes.c_short
-II_INT4 = ctypes.c_int
-II_INT8 = ctypes.c_longlong
-II_LONG = ctypes.c_int
-II_PTR = ctypes.c_void_p
-II_STR = ctypes.c_char_p  ##  use for e.g. II_CHAR II_FAR *string
-II_UCHAR = ctypes.c_ubyte
-II_UINT1 = ctypes.c_ubyte
-II_UINT2 = ctypes.c_ushort
-II_UINT4 = ctypes.c_uint
-II_UINT8 = ctypes.c_ulonglong
-II_ULONG = ctypes.c_uint
+II_BOOL = C.c_int  ##  II_BOOL is not what you might guess...
+II_CHAR = C.c_char
+II_FLOAT4 = C.c_float
+II_FLOAT8 = C.c_double
+II_INT = C.c_int
+II_INT1 = C.c_char
+II_INT2 = C.c_short
+II_INT4 = C.c_int
+II_INT8 = C.c_longlong
+II_LONG = C.c_int
+II_PTR = C.c_void_p
+II_STR = C.c_char_p  ##  use for e.g. II_CHAR II_FAR *string
+II_UCHAR = C.c_ubyte
+II_UINT1 = C.c_ubyte
+II_UINT2 = C.c_ushort
+II_UINT4 = C.c_uint
+II_UINT8 = C.c_ulonglong
+II_ULONG = C.c_uint
 
 IIAPI_DT_ID = II_INT2
 IIAPI_QUERYTYPE = II_ULONG
@@ -38,7 +38,7 @@ else:
     IIAPI_DEV_MODE = False
 
 
-class IIAPI(ctypes.Structure):
+class IIAPI(C.Structure):
     '''structures for the Ingres OpenAPI'''
 
     if IIAPI_DEV_MODE:
@@ -75,8 +75,10 @@ class IIAPI(ctypes.Structure):
 
         prefix = self._field_name_prefix()
         full_name = prefix + '_' + suffix
-        ##  don't use try/except here; let it be fatal
-        field = getattr(self,full_name)
+        try:
+            field = getattr(self,full_name)
+        except AttributeError:
+            field = None
         return field
 
 
@@ -173,19 +175,19 @@ class IIAPI_FDATADESCR(IIAPI_MEMBER):
     '''
 
     _fields_ = [
-        ('fd_name', ctypes.c_char_p),
-        ('fd_type', ctypes.c_short),
-        ('fd_length', ctypes.c_short),
-        ('fd_prec', ctypes.c_short),
-        ('fd_column', ctypes.c_int),
-        ('fd_funcID', ctypes.c_int),
-        ('fd_cvLen', ctypes.c_int),
-        ('fd_cvPrec', ctypes.c_int),
-        ('fd_delimiter', ctypes.c_bool),
-        ('fd_delimLength', ctypes.c_short),
-        ('fd_delimValue', ctypes.c_char_p),
-        ('fd_nullable', ctypes.c_bool),
-        ('fd_nullInfo', ctypes.c_bool),
+        ('fd_name', C.c_char_p),
+        ('fd_type', C.c_short),
+        ('fd_length', C.c_short),
+        ('fd_prec', C.c_short),
+        ('fd_column', C.c_int),
+        ('fd_funcID', C.c_int),
+        ('fd_cvLen', C.c_int),
+        ('fd_cvPrec', C.c_int),
+        ('fd_delimiter', C.c_bool),
+        ('fd_delimLength', C.c_short),
+        ('fd_delimValue', C.c_char_p),
+        ('fd_nullable', C.c_bool),
+        ('fd_nullInfo', C.c_bool),
         ('fd_nullDescr', IIAPI_DESCRIPTOR),
         ('fd_nullValue', IIAPI_DATAVALUE),
     ]
@@ -206,9 +208,9 @@ class IIAPI_COPYMAP(IIAPI_MEMBER):
         ('cp_fileName', II_STR),
         ('cp_logName', II_STR),
         ('cp_dbmsCount', II_INT2),
-        ('cp_dbmsDescr', ctypes.POINTER(IIAPI_DESCRIPTOR)),
+        ('cp_dbmsDescr', C.POINTER(IIAPI_DESCRIPTOR)),
         ('cp_fileCount', II_INT2),
-        ('cp_fileDescr', ctypes.POINTER(IIAPI_FDATADESCR)),
+        ('cp_fileDescr', C.POINTER(IIAPI_FDATADESCR)),
     ]
 
 
@@ -228,8 +230,8 @@ class IIAPI_SVR_ERRINFO(IIAPI_MEMBER):
         ('svr_server_type', II_LONG),
         ('svr_severity', II_LONG),
         ('svr_parmCount', II_INT2),
-        ('svr_parmDescr', ctypes.POINTER(IIAPI_DESCRIPTOR)),
-        ('svr_parmValue', ctypes.POINTER(IIAPI_DATAVALUE)),
+        ('svr_parmDescr', C.POINTER(IIAPI_DESCRIPTOR)),
+        ('svr_parmValue', C.POINTER(IIAPI_DATAVALUE)),
     ]
 
 
@@ -273,7 +275,7 @@ class IIAPI_XA_DIS_TRAN_ID(IIAPI_MEMBER):
 
 
 ##  NB this is a union not a struct
-class IIAPI_2PC_TRAN_ID(ctypes.Union):
+class IIAPI_2PC_TRAN_ID(C.Union):
     '''2PC transaction identifier'''
 
     _fields_ = [
@@ -317,7 +319,7 @@ class IIAPI_ABORTPARM(IIAPI_PARM):
 
     _fields_ = [
         ('ab_genParm', IIAPI_GENPARM), 
-        ('ab_connHandle', ctypes.c_void_p)
+        ('ab_connHandle', C.c_void_p)
     ]
 
 
@@ -326,8 +328,8 @@ class IIAPI_AUTOPARM(IIAPI_PARM):
 
     _fields_ = [
         ('ac_genParm', IIAPI_GENPARM),
-        ('ac_connHandle', ctypes.c_void_p),
-        ('ac_tranHandle', ctypes.c_void_p),
+        ('ac_connHandle', C.c_void_p),
+        ('ac_tranHandle', C.c_void_p),
     ]
 
 
@@ -420,7 +422,7 @@ class IIAPI_EVENTPARM(IIAPI_PARM):
     '''parameter block for setting up an event handler'''
 
     _fields_ = [
-        ('ev_endHandle', II_PTR),
+        ('ev_envHandle', II_PTR),
         ('ev_connHandle', II_PTR),
         ('ev_eventName', II_STR),
         ('ev_eventOwner', II_STR),
@@ -450,7 +452,7 @@ class IIAPI_GETCOLPARM(IIAPI_PARM):
         ('gc_stmtHandle', II_PTR),
         ('gc_rowCount', II_INT2),  # incorrectly documented II_INT
         ('gc_columnCount', II_INT2),  # incorrectly documented II_INT
-        ('gc_columnData', ctypes.POINTER(IIAPI_DATAVALUE)),
+        ('gc_columnData', C.POINTER(IIAPI_DATAVALUE)),
         ('gc_rowsReturned', II_INT2),  # incorrectly documented II_INT
         ('gc_moreSegments', II_BOOL),
     ]
@@ -485,7 +487,7 @@ class IIAPI_GETDESCRPARM(IIAPI_PARM):
         ('gd_genParm', IIAPI_GENPARM),
         ('gd_stmtHandle', II_PTR),
         ('gd_descriptorCount', II_INT2),
-        ('gd_descriptor', ctypes.POINTER(IIAPI_DESCRIPTOR)),
+        ('gd_descriptor', C.POINTER(IIAPI_DESCRIPTOR)),
     ]
 
 
@@ -499,7 +501,7 @@ class IIAPI_GETEINFOPARM(IIAPI_PARM):
         ('ge_errorCode', II_LONG),
         ('ge_message', II_STR),
         ('ge_serverInfoAvail', II_BOOL),
-        ('ge_serverInfo', ctypes.POINTER(IIAPI_SVR_ERRINFO)),
+        ('ge_serverInfo', C.POINTER(IIAPI_SVR_ERRINFO)),
         ('ge_status', IIAPI_STATUS),
     ]
 
@@ -509,8 +511,8 @@ class IIAPI_GETEVENTPARM(IIAPI_PARM):
 
     _fields_ = [
         ('gv_genParm', IIAPI_GENPARM),
-        ('gv_connHandle', ctypes.c_void_p),
-        ('gv_timeout', ctypes.c_int),
+        ('gv_connHandle', C.c_void_p),
+        ('gv_timeout', C.c_int),
     ]
 
 
@@ -581,7 +583,7 @@ class IIAPI_PUTCOLPARM(IIAPI_PARM):
         ('pc_genParm', IIAPI_GENPARM),
         ('pc_stmtHandle', II_PTR),
         ('pc_columnCount', II_INT2),
-        ('pc_columnData', ctypes.POINTER(IIAPI_DATAVALUE)),
+        ('pc_columnData', C.POINTER(IIAPI_DATAVALUE)),
         ('pc_moreSegments', II_BOOL),
     ]
 
@@ -593,7 +595,7 @@ class IIAPI_PUTPARMPARM(IIAPI_PARM):
         ('pp_genParm', IIAPI_GENPARM),
         ('pp_stmtHandle', II_PTR),
         ('pp_parmCount', II_INT2),
-        ('pp_parmData', ctypes.POINTER(IIAPI_DATAVALUE)),
+        ('pp_parmData', C.POINTER(IIAPI_DATAVALUE)),
         ('pp_moreSegments', II_BOOL),
     ]
 
@@ -672,9 +674,9 @@ class IIAPI_SETCONPRMPARM(IIAPI_PARM):
 
     _fields_ = [
         ('sc_genParm', IIAPI_GENPARM),
-        ('sc_connHandle', ctypes.c_void_p),
-        ('sc_paramID', ctypes.c_int),
-        ('sc_paramValue', ctypes.c_void_p),
+        ('sc_connHandle', C.c_void_p),
+        ('sc_paramID', C.c_int),
+        ('sc_paramValue', C.c_void_p),
     ]
 
 
@@ -685,7 +687,7 @@ class IIAPI_SETDESCRPARM(IIAPI_PARM):
         ('sd_genParm', IIAPI_GENPARM),
         ('sd_stmtHandle', II_PTR),
         ('sd_descriptorCount', II_INT2),
-        ('sd_descriptor', ctypes.POINTER(IIAPI_DESCRIPTOR)),
+        ('sd_descriptor', C.POINTER(IIAPI_DESCRIPTOR)),
     ]
 
 
@@ -693,10 +695,10 @@ class IIAPI_SETENVPRMPARM(IIAPI_PARM):
     '''parameter block for IIapi_setEnvParam()'''
 
     _fields_ = [
-        ('se_envHandle', ctypes.c_void_p),
-        ('se_paramID', ctypes.c_int),
-        ('se_paramValue', ctypes.c_void_p),
-        ('se_status', ctypes.c_uint),
+        ('se_envHandle', C.c_void_p),
+        ('se_paramID', C.c_int),
+        ('se_paramValue', C.c_void_p),
+        ('se_status', C.c_uint),
     ]
 
 

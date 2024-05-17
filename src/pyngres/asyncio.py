@@ -16,6 +16,9 @@ from .IIAPI_PARM import *
 from pyngres import ( IIapi_convertData, IIapi_formatData, IIapi_getColumnInfo, 
     IIapi_getErrorInfo, IIapi_initialize, IIapi_registerXID, IIapi_releaseEnv, 
     IIapi_releaseXID, IIapi_setEnvParam, IIapi_terminate ) 
+##  import the callback helper functions
+from pyngres import ( IIapi_callback, IIapi_getCallbackPtr,
+    IIapi_getClosurePtr, IIapi_getClosure ) 
 
 
 ##  the IIAPI_DEV_MODE envar puts pyngres.asyncio in development mode
