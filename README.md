@@ -1,8 +1,11 @@
 # Pyngres
 
-Pyngres is a Python wrapper for the Actian Ingres OpenAPI.
+Pyngres is a Python wrapper for the Actian Ingres/Vector/X OpenAPI. It is
+currently available for Windows, Linux, and Darwin.
 
 ## Installation
+
+Pyngres requires Python 3.8 or higher. 
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pyngres.
 
@@ -14,17 +17,33 @@ pip install pyngres
 
 ## Usage
 
-The pyngres package contains three modules. The pyngres module is a set of
-Python bindings for the Actian OpenAPI. Anyone already familiar with the OpenAPI and
+The pyngres package contains three modules. The base **pyngres** module is a set of
+Python bindings for the Actian OpenAPI. It is used exactly like the iilibapi 
+library is used in a C program. The programmer is expected to use `IIapi_wait()` to 
+complete asynchronous OpenAPI calls. Anyone familiar with the OpenAPI and
 with Python programming will find their expertise using the OpenAPI in C is 
-directly transferable.
+directly transferable. 
+
+The second module is **pyngres.asyncio** which makes pyngres
+usable with the Python asyncio package. It provides very clean support for
+the asynchronous OpenAPI functions. The third package is **pyngres.blocking**, which
+simply conceals the busy-wait loops that are required when using the OpenAPI 
+in a synchronous application.
 
 ```python
 import pyngres as ii
 ```
+or
+```python
+import pyngres.asyncio as ii
+```
+or
+```python
+import pyngres.blocking as ii
+```
 
-**Linux:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
-is your installation identifier (usually **II**). Example:
+**Linux** and **Darwin:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
+is your installation identifier (usually **II** or **AC**). Example:
 
 ```
 . ~/.ingIIsh
@@ -32,20 +51,31 @@ is your installation identifier (usually **II**). Example:
 
 **Windows:** your Ingres installation will usually be initialized already.
 
-Set the `IIAPI_DEV_MODE` environment variable or call `loguru.enable('pyngres')` in your application code to start pyngres API tracing using [Loguru](https://loguru.readthedocs.io/en/stable/).
+Set the `IIAPI_DEV_MODE` environment variable to 'ON' or call `loguru.enable('pyngres')`
+in your application code to start pyngres API tracing using 
+[Loguru](https://loguru.readthedocs.io/en/stable/).
 
 
 ### pyngres.asyncio
 
-Actian OpenAPI is intrinsically asynchronous.
-The standard Python **asyncio** package supports design patterns and a well-known
-infrastructure that facilitates the 
-development of highly responsive event-driven applications.  
+The pyngres.asyncio package can be used in place of the bare-bones pyngres
+package. The OpenAPI is intrinsically asynchronous. The OpenAPI sends a request to a 
+server and then returns to the caller without waiting for the request to 
+be completed. Ordinarily, using the bare-bones OpenAPI, that would mean
+it is up to the programmer to insert calls to `IIapi_wait()` 
+to pass control back to the OpenAPI so that it can set the gp_completed flag 
+and invoke any callback routine that was requested. Using pyngres.asyncio 
+instead with the Python asyncio features is much tidier.
 
-The `pyngres.asyncio` package can be used in place of the bare-bones `pyngres`
-package. It supports all the same entry points, but makes the asynchronous 
-OpenAPI functions awaitable. They are executed in the **asyncio** event loop
-concurrently with any other awaitables. 
+Python asyncio provides infrastructure and well-known design patterns that
+make asynchronous programming more convenient and supports
+concurrent execution. The asyncio package facilitates the development of 
+highly responsive event-driven applications, such as GUI applications.
+
+**pyngres.asyncio** supports all the same entry points, but all the asynchronous 
+OpenAPI functions are awaitable. They are executed in the asyncio event loop
+concurrently with any other awaitables. (The one exception is the `IIapi_wait()`
+function which does not exist in pyngres.asyncio; it would serve no purpose.)
 
 ```python
 import pyngres.asyncio as ii
@@ -53,17 +83,12 @@ import pyngres.asyncio as ii
 
 ### pyngres.blocking
 
-OpenAPI applications that have no need to cooperate with **asyncio** 
-packages can use the `pyngres.blocking` package. It is functionally identical
-to the base `pyngres` package except that all the of the OpenAPI functions 
-block until completion, in a platform independent way. This slightly reduces
+OpenAPI applications that have no need to cooperate with other asyncio 
+packages can use the pyngres.blocking package. It is functionally identical
+to the base pyngres package except that all the of the OpenAPI functions 
+block until completion in a platform independent way. This slightly reduces
 the visual clutter of hard-coded loops calling `IIapi_wait()`, and eliminates
 the risk of omitting a necessary wait loop. 
-
-The `pyngres.blocking` package includes a null
-implementation of `IIapi_wait()` so that `pyngres.blocking` can simply be
-substituted for `pyngres` in an existing application without requiring 
-any changes. 
 
 ```python
 import pyngres.blocking as ii
@@ -125,3 +150,4 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
