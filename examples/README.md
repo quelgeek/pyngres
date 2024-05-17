@@ -62,7 +62,7 @@ the **connHandle** member of the **IIAPI_CONNPARM** object. That is an
 important "gotcha" if you rely on the examples. We have adapted most of
 our Python examples to show the way you would really connect today. We choose
 **IIAPI_VERSION_11** explicitly. (Alternatively **IIAPI_VERSION** would select
-the latest version.)
+whatever version is the latest.)
 
 It is important to remember that Python objects created within a scope get 
 garbage-collected when control passes out of that scope. That is why some of
