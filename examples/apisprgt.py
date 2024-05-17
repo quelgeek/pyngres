@@ -253,8 +253,7 @@ sdp.sd_genParm.gp_closure = None
 sdp.sd_stmtHandle = stmtHandle
 sdp.sd_descriptorCount = 2
 descrArray = (IIAPI_DESCRIPTOR * 2)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
-sdp.sd_descriptor = descrArrayPtr
+sdp.sd_descriptor = descrArray
 
 sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
 sdp.sd_descriptor[0].ds_nullable = False

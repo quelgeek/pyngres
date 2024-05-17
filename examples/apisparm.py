@@ -207,9 +207,7 @@ insTBLInfo = [
 ]
 DEMO_TABLE_SIZE = len(insTBLInfo)
 descrArray = (IIAPI_DESCRIPTOR * 2)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
 dataArray = (IIAPI_DATAVALUE * 2)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 
 clp = IIAPI_CLOSEPARM()
 sdp = IIAPI_SETDESCRPARM()
@@ -254,7 +252,7 @@ for row in range(DEMO_TABLE_SIZE):
     sdp.sd_stmtHandle = stmtHandle
     sdp.sd_descriptorCount = 2
 
-    sdp.sd_descriptor = descrArrayPtr
+    sdp.sd_descriptor = descrArray
     sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
     sdp.sd_descriptor[0].ds_nullable = False
     sdp.sd_descriptor[0].ds_length = len(insTBLInfo[row][0])
@@ -282,7 +280,7 @@ for row in range(DEMO_TABLE_SIZE):
     ppp.pp_stmtHandle = stmtHandle
     ppp.pp_parmCount = 2
 
-    ppp.pp_parmData = dataArrayPtr
+    ppp.pp_parmData = dataArray
     ppp.pp_parmData[0].dv_null = False
     ppp.pp_parmData[0].dv_length = len(insTBLInfo[row][0])
     dv_value1 = ctypes.create_string_buffer(insTBLInfo[row][0])

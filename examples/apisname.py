@@ -19,6 +19,7 @@
 
 
 from pyngres import *
+import ctypes
 import struct
 import sys
 
@@ -92,7 +93,6 @@ gqp = IIAPI_GETQINFOPARM()
 clp = IIAPI_CLOSEPARM()
 wtp = IIAPI_WAITPARM()
 wtp.wt_timeout = -1
-DescrBuffer = (IIAPI_DESCRIPTOR * 5)()
 DataBuffer = (IIAPI_DATAVALUE * 5)()
 
 envHandle = IIdemo_init()
@@ -173,7 +173,7 @@ gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = descriptorCount
-gcp.gc_columnData = ctypes.cast(DataBuffer, ctypes.POINTER(IIAPI_DATAVALUE))
+gcp.gc_columnData = DataBuffer
 gcp.gc_stmtHandle = stmtHandle
 gcp.gc_moreSegments = 0
 buffers = [ctypes.create_string_buffer(129) for i in range(descriptorCount)]

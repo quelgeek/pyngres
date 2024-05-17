@@ -142,9 +142,7 @@ def IIdemo_insert(connHandle, tranHandle):
 
     DEMO_TABLE_SIZE = len(insTBLInfo)
     descrArray = (IIAPI_DESCRIPTOR * 2)()
-    descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
     dataArray = (IIAPI_DATAVALUE * 2)()
-    dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 
     for row in range(DEMO_TABLE_SIZE):
         ##  Insert row
@@ -171,7 +169,7 @@ def IIdemo_insert(connHandle, tranHandle):
         sdp.sd_stmtHandle = stmtHandle
         sdp.sd_descriptorCount = 2
 
-        sdp.sd_descriptor = descrArrayPtr
+        sdp.sd_descriptor = descrArray
         sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
         sdp.sd_descriptor[0].ds_nullable = False
         sdp.sd_descriptor[0].ds_length = len(insTBLInfo[row][0])
@@ -200,7 +198,7 @@ def IIdemo_insert(connHandle, tranHandle):
         ppp.pp_parmCount = 2
         ppp.pp_moreSegments = False
 
-        ppp.pp_parmData = dataArrayPtr
+        ppp.pp_parmData = dataArray
         ppp.pp_parmData[0].dv_null = False
         ppp.pp_parmData[0].dv_length = len(insTBLInfo[row][0])
         dv_value1 = ctypes.create_string_buffer(insTBLInfo[row][0])
@@ -375,12 +373,11 @@ while not gdp.gd_genParm.gp_completed:
 
 ##  position cursor on first row
 dataArray = (IIAPI_DATAVALUE * 2)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = gdp.gd_descriptorCount
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 var1 = ctypes.create_string_buffer(33)
 var2 = ctypes.c_int()
 
@@ -418,12 +415,11 @@ while True:
 
     ##  describe query parameters - cursor handle
     descrArray = (IIAPI_DESCRIPTOR * 1)()
-    descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
     sdp.sd_genParm.gp_callback = None
     sdp.sd_genParm.gp_closure = None
     sdp.sd_stmtHandle = qyp.qy_stmtHandle
     sdp.sd_descriptorCount = 1
-    sdp.sd_descriptor = descrArrayPtr
+    sdp.sd_descriptor = descrArray
 
     sdp.sd_descriptor[0].ds_dataType = IIAPI_HNDL_TYPE
     sdp.sd_descriptor[0].ds_nullable = False
@@ -440,12 +436,11 @@ while True:
 
     ##  send query parameters - cursor handle
     cursorArray = (IIAPI_DATAVALUE * 1)()
-    cursorArrayPtr = ctypes.cast(cursorArray, ctypes.POINTER(IIAPI_DATAVALUE))
     ppp.pp_genParm.gp_callback = None
     ppp.pp_genParm.gp_closure = None
     ppp.pp_stmtHandle = qyp.qy_stmtHandle
     ppp.pp_parmCount = sdp.sd_descriptorCount
-    ppp.pp_parmData = cursorArrayPtr
+    ppp.pp_parmData = cursorArray
     ppp.pp_moreSegments = False
 
     ppp.pp_parmData[0].dv_null = False

@@ -214,9 +214,7 @@ procName = ctypes.create_string_buffer(b'api_demo_prbr')
 parmName = ctypes.create_string_buffer(b'table_name')
 parmCount = ctypes.create_string_buffer(b'column_count')
 descrArray = (IIAPI_DESCRIPTOR * 3)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
 dataArray = (IIAPI_DATAVALUE * 3)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 
 qyp = IIAPI_QUERYPARM()
 gdp = IIAPI_GETDESCRPARM()
@@ -258,7 +256,7 @@ sdp.sd_genParm.gp_callback = None
 sdp.sd_genParm.gp_closure = None
 sdp.sd_stmtHandle = stmtHandle
 sdp.sd_descriptorCount = 3
-sdp.sd_descriptor = descrArrayPtr
+sdp.sd_descriptor = descrArray
 
 sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
 sdp.sd_descriptor[0].ds_nullable = False
@@ -296,7 +294,7 @@ ppp.pp_stmtHandle = stmtHandle
 ppp.pp_parmCount = 3
 ppp.pp_moreSegments = False
 
-ppp.pp_parmData = dataArrayPtr
+ppp.pp_parmData = dataArray
 ppp.pp_parmData[0].dv_null = False
 ppp.pp_parmData[0].dv_length = len(procName.value)
 ppp.pp_parmData[0].dv_value = ctypes.addressof(procName)
@@ -331,7 +329,7 @@ gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 2
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 name = varchar(256)
 count = ctypes.c_int()
 gcp.gc_columnData[0].dv_value = ctypes.addressof(name)

@@ -248,8 +248,7 @@ sdp.sd_stmtHandle = stmtHandle
 sdp.sd_descriptorCount = 1
 
 descrArray = (IIAPI_DESCRIPTOR * 2)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
-sdp.sd_descriptor = descrArrayPtr
+sdp.sd_descriptor = descrArray
 
 sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
 sdp.sd_descriptor[0].ds_nullable = False
@@ -301,8 +300,7 @@ gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 2
 dataArray = (IIAPI_DATAVALUE * 2)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 owner = varchar(33)
 name = varchar(33)
 gcp.gc_columnData[0].dv_value = ctypes.addressof(owner)

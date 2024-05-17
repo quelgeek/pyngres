@@ -206,9 +206,7 @@ insTBLInfo = [
 ]
 DEMO_TABLE_SIZE = len(insTBLInfo)
 descrArray = (IIAPI_DESCRIPTOR * 3)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
 dataArray = (IIAPI_DATAVALUE * 3)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 procName = ctypes.create_string_buffer(b'api_demo_proc')
 parmName = ctypes.create_string_buffer(b'name')
 parmAge = ctypes.create_string_buffer(b'age')
@@ -258,7 +256,7 @@ for row in range(DEMO_TABLE_SIZE):
     sdp.sd_genParm.gp_closure = None
     sdp.sd_stmtHandle = stmtHandle
     sdp.sd_descriptorCount = 3
-    sdp.sd_descriptor = descrArrayPtr
+    sdp.sd_descriptor = descrArray
 
     if procHandle:
         sdp.sd_descriptor[0].ds_dataType = IIAPI_HNDL_TYPE
@@ -300,7 +298,7 @@ for row in range(DEMO_TABLE_SIZE):
     ppp.pp_stmtHandle = stmtHandle
     ppp.pp_parmCount = sdp.sd_descriptorCount
     ppp.pp_moreSegments = False
-    ppp.pp_parmData = dataArrayPtr
+    ppp.pp_parmData = dataArray
     ppp.pp_parmData[0].dv_null = 0
 
     if procHandle:

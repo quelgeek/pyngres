@@ -232,12 +232,11 @@ stmtHandle = qyp.qy_stmtHandle
 
 ##  describe query parameters
 descrArray = (IIAPI_DESCRIPTOR * 3)()
-descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
 sdp.sd_genParm.gp_callback = None
 sdp.sd_genParm.gp_closure = None
 sdp.sd_stmtHandle = stmtHandle
 sdp.sd_descriptorCount = 2
-sdp.sd_descriptor = descrArrayPtr
+sdp.sd_descriptor = descrArray
 
 sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
 sdp.sd_descriptor[0].ds_nullable = False
@@ -263,12 +262,11 @@ while not sdp.sd_genParm.gp_completed:
 ##  send query parameters
 DEMO_TABLE_SIZE = len(insTBLInfo)
 dataArray = (IIAPI_DATAVALUE * 3)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 ppp.pp_genParm.gp_callback = None
 ppp.pp_genParm.gp_closure = None
 ppp.pp_stmtHandle = stmtHandle
 ppp.pp_parmCount = 2
-ppp.pp_parmData = dataArrayPtr
+ppp.pp_parmData = dataArray
 ppp.pp_moreSegments = 0
 
 name = ctypes.create_string_buffer(insTBLInfo[0][0])
@@ -334,7 +332,7 @@ for row in range(DEMO_TABLE_SIZE):
     sdp.sd_genParm.gp_closure = None
     sdp.sd_stmtHandle = stmtHandle
     sdp.sd_descriptorCount = 3
-    sdp.sd_descriptor = descrArrayPtr
+    sdp.sd_descriptor = descrArray
 
     sdp.sd_descriptor[0].ds_dataType = IIAPI_HNDL_TYPE
     sdp.sd_descriptor[0].ds_length = ctypes.sizeof(II_PTR)
@@ -370,7 +368,7 @@ for row in range(DEMO_TABLE_SIZE):
     ppp.pp_genParm.gp_closure = None
     ppp.pp_stmtHandle = stmtHandle
     ppp.pp_parmCount = 3
-    ppp.pp_parmData = dataArrayPtr
+    ppp.pp_parmData = dataArray
     ppp.pp_moreSegments = 0
 
     ppp.pp_parmData[0].dv_null = False

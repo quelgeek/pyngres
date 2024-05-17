@@ -276,12 +276,11 @@ def IIdemo_insert(connHandle, tranHandle):
 
     ##  describe query parameters
     descrArray = (IIAPI_DESCRIPTOR * 3)()
-    descrArrayPtr = ctypes.cast(descrArray, ctypes.POINTER(IIAPI_DESCRIPTOR))
     sdp.sd_genParm.gp_callback = None
     sdp.sd_genParm.gp_closure = None
     sdp.sd_stmtHandle = stmtHandle
     sdp.sd_descriptorCount = 3
-    sdp.sd_descriptor = descrArrayPtr
+    sdp.sd_descriptor = descrArray
 
     sdp.sd_descriptor[0].ds_dataType = IIAPI_CHA_TYPE
     sdp.sd_descriptor[0].ds_nullable = False
@@ -317,12 +316,11 @@ def IIdemo_insert(connHandle, tranHandle):
 
     ##  send query parameters
     dataArray = (IIAPI_DATAVALUE * 3)()
-    dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
     ppp.pp_genParm.gp_callback = None
     ppp.pp_genParm.gp_closure = None
     ppp.pp_stmtHandle = stmtHandle
     ppp.pp_parmCount = 1
-    ppp.pp_parmData = dataArrayPtr
+    ppp.pp_parmData = dataArray
     ppp.pp_parmData[0].dv_null = False
     ppp.pp_parmData[0].dv_length = len(insTBLInfo[0][0])
     dv_value1 = ctypes.create_string_buffer(insTBLInfo[0][0])
@@ -348,7 +346,7 @@ def IIdemo_insert(connHandle, tranHandle):
         ppp.pp_genParm.gp_closure = None
         ppp.pp_stmtHandle = stmtHandle
         ppp.pp_parmCount = 1
-        ppp.pp_parmData = dataArrayPtr
+        ppp.pp_parmData = dataArray
         ppp.pp_parmData[0].dv_null = False
         ppp.pp_parmData[0].dv_length = blen.value + 2
         ppp.pp_parmData[0].dv_value = ctypes.addressof(blobdata2)
@@ -372,7 +370,7 @@ def IIdemo_insert(connHandle, tranHandle):
     ppp.pp_genParm.gp_closure = None
     ppp.pp_stmtHandle = stmtHandle
     ppp.pp_parmCount = 1
-    ppp.pp_parmData = dataArrayPtr
+    ppp.pp_parmData = dataArray
     ppp.pp_parmData[0].dv_null = False
     ppp.pp_parmData[0].dv_length = len(insTBLInfo[0][1])
     comment = ctypes.create_string_buffer(insTBLInfo[0][1])
@@ -493,14 +491,13 @@ if gdp.gd_genParm.gp_status != IIAPI_ST_SUCCESS:
 ##  get query results
 print(f'{script}: get results')
 dataArray = (IIAPI_DATAVALUE * 3)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 var1 = ctypes.create_string_buffer(21)
 gcp = IIAPI_GETCOLPARM()
 gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 1
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 gcp.gc_columnData[0].dv_value = ctypes.addressof(var1)
 gcp.gc_stmtHandle = stmtHandle
 gcp.gc_moreSegments = 0
@@ -524,7 +521,7 @@ while True:
     gcp.gc_genParm.gp_closure = None
     gcp.gc_rowCount = 1
     gcp.gc_columnCount = 1
-    gcp.gc_columnData = dataArrayPtr
+    gcp.gc_columnData = dataArray
     gcp.gc_columnData[0].dv_value = ctypes.addressof(blobdata2)
     gcp.gc_stmtHandle = stmtHandle
 
@@ -552,7 +549,7 @@ gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 1
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 gcp.gc_columnData[0].dv_value = ctypes.addressof(var2)
 gcp.gc_stmtHandle = stmtHandle
 gcp.gc_moreSegments = 0

@@ -4,7 +4,7 @@ pyngres is a Python package that wraps the *Actian OpenIngres API*.
 
 ## Example Code
 
-The examples run both on Linux and on Windows. Paths are shown here using
+The examples run on Linux, Windows, and Darwin. Paths are shown here using
 Linux syntax only for brevity.
 
 An Ingres installation rooted at II_SYSTEM contains a directory called
@@ -29,14 +29,15 @@ Our examples expect Python 3.6 or higher. However, if you prefer to use an
 older version you should have no difficulty making the necessary changes to 
 run the examples.
 
-You will need to install pyngres into your environment.
+You will need to install pyngres and multipledispatch into your environment.
 ```
 pip install pyngres
+pip install multipledispatch
 ```
 
 The pyngres library has a dependency on loguru. **pip** will usually resolve
 it automatically but there is a known problem when using conda/miniconda
-which prevents it from installing. The workaround is to install loguru
+which sometimes prevents it from installing. The workaround is to install loguru
 first, before installing pyngres.
 
 You will need to have a running Ingres installation available, your local

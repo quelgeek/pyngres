@@ -98,6 +98,7 @@ def IIdemo_disconn(connHandle):
     IIapi_disconnect(dcp)
     while not dcp.dc_genParm.gp_completed:
         IIapi_wait(wtp)
+      
     connHandle = None
     return connHandle
 
@@ -190,8 +191,8 @@ gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = 1
 gcp.gc_rowsReturned = 0
-dataPtrArray = (IIAPI_DATAVALUE * gcp.gc_rowCount * gcp.gc_columnCount)()
-gcp.gc_columnData = ctypes.cast(dataPtrArray, ctypes.POINTER(IIAPI_DATAVALUE))
+dataPtrArray = (IIAPI_DATAVALUE * (gcp.gc_rowCount * gcp.gc_columnCount))()
+gcp.gc_columnData = dataPtrArray
 gcp.gc_columnData[0].dv_value = tablename_buffer
 gcp.gc_stmtHandle = stmtHandle
 

@@ -122,7 +122,6 @@ target = dbtarget.encode()
 queryText = b'SELECT table_name FROM iitables'
 ROW_COUNT = 5
 dataArray = (IIAPI_DATAVALUE * ROW_COUNT)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 varvalue = []
 for i in range(ROW_COUNT):
     varvalue.append(ctypes.c_buffer(256))
@@ -181,7 +180,7 @@ gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = ROW_COUNT
 gcp.gc_columnCount = 1
-gcp.gc_columnData = dataArrayPtr
+gcp.gc_columnData = dataArray
 gcp.gc_stmtHandle = stmtHandle
 gcp.gc_moreSegments = 0
 

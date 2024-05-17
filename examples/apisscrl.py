@@ -28,7 +28,6 @@ import sys
 ROW_COUNT = 10
 
 dataArray = (IIAPI_DATAVALUE * ROW_COUNT)()
-dataArrayPtr = ctypes.cast(dataArray, ctypes.POINTER(IIAPI_DATAVALUE))
 resultSize = 0
 
 
@@ -185,7 +184,7 @@ def IIdemo_get(stmtHandle, rows):
         gcp.gc_stmtHandle = stmtHandle
         gcp.gc_rowCount = rows
         gcp.gc_columnCount = 1
-        gcp.gc_columnData = dataArrayPtr
+        gcp.gc_columnData = dataArray
         gcp.gc_moreSegments = 0
 
         IIapi_getColumns(gcp)
