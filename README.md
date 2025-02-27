@@ -31,15 +31,15 @@ simply conceals the busy-wait loops that are required when using the OpenAPI
 in a synchronous application.
 
 ```python
-import pyngres as ii
+import pyngres as py
 ```
 or
 ```python
-import pyngres.asyncio as ii
+import pyngres.asyncio as py
 ```
 or
 ```python
-import pyngres.blocking as ii
+import pyngres.blocking as py
 ```
 
 **Linux** and **Darwin:** initialize your Ingres environment by executing **~/.ing**XX**sh**, where XX
@@ -51,12 +51,52 @@ is your installation identifier (usually **II** or **AC**). Example:
 
 **Windows:** your Ingres installation will usually be initialized already.
 
-Set the `IIAPI_DEV_MODE` environment variable to 'ON' or call `loguru.enable('pyngres')`
-in your application code to start pyngres API tracing using 
+## Debugging and Diagnostics
+
+Set the **IIAPI_DEV_MODE** environment variable to **ON** or call **loguru.enable('pyngres')**
+in your application code to start **pyngres** tracing using 
 [Loguru](https://loguru.readthedocs.io/en/stable/).
 
+You can also enable Ingres OpenAPI tracing and Ingres GCA tracing. (We have generally found the latter most useful.) 
 
-### pyngres.asyncio
+Ingres session tracing using **SET SERVER_TRACE** (or **SET TRACE POINT SC930**) is also extremely useful. Refer to the [Actian Ingres SQL Reference Guide](https://docs.actian.com/actianx/12.0/index.html#page/SQLRef/SERVER_TRACE.htm) for more information.
+
+### Windows Debugging Environment Variables
+```
+set IIAPI_DEV_MODE=ON
+set LOGURU_LEVEL=TRACE
+set II_API_LOG=c:\temp\api.log
+set II_API_SET='printtrace; tracefile \\temp\\api_tracelog.log'
+set II_API_TRACE=5
+set II_GCA_LOG=c:\temp\gca.log
+set II_GCA_TRACE=6
+```
+
+### Server-Side Ingres Tracing (in **sql**, Windows)
+
+```
+SET SERVER_TRACE ON WITH DETAIL, DIRECTORY='C:\temp\session_logs'
+```
+
+### Linux/MacOs Debugging Environment Variables
+
+```
+export IIAPI_DEV_MODE=ON
+export LOGURU_LEVEL=TRACE
+export II_API_LOG=/tmp/api.log
+export II_API_SET='printtrace; tracefile /tmp/api_tracelog.log'
+export II_API_TRACE=5
+export II_GCA_LOG=/tmp/gca.log
+export II_GCA_TRACE=6
+```
+
+### Server-Side Ingres Tracing (in **sql**, Linux/MacOS)
+
+```
+SET SERVER_TRACE ON WITH DETAIL, DIRECTORY='/tmp/session_logs'
+```
+
+## pyngres.asyncio
 
 The pyngres.asyncio package can be used in place of the bare-bones pyngres
 package. The OpenAPI is intrinsically asynchronous. The OpenAPI sends a request to a 
@@ -78,10 +118,10 @@ concurrently with any other awaitables. (The one exception is the `IIapi_wait()`
 function which does not exist in pyngres.asyncio; it would serve no purpose.)
 
 ```python
-import pyngres.asyncio as ii
+import pyngres.asyncio as py
 ```
 
-### pyngres.blocking
+## pyngres.blocking
 
 OpenAPI applications that have no need to cooperate with other asyncio 
 packages can use the pyngres.blocking package. It is functionally identical
@@ -91,7 +131,7 @@ the visual clutter of hard-coded loops calling `IIapi_wait()`, and eliminates
 the risk of omitting a necessary wait loop. 
 
 ```python
-import pyngres.blocking as ii
+import pyngres.blocking as py
 ```
 
 ## API
