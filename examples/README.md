@@ -83,7 +83,7 @@ actively discourage. Features that we discourage include:
 
 ```from pyngres import *```
 where we would actually suggest 
-```import pyngres as ii```
+```import pyngres as py```
 
 The examples rarely do any error handling unless the example is specifically 
 illustrating error handling.
