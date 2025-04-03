@@ -16,7 +16,7 @@ from .IIAPI_CONSTANTS import *
 from .IIAPI_PARM import *
 
 
-_name = __name__
+_name = 'pyngres'
 
 
 ##  pick up environment settings
