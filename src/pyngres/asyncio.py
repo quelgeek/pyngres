@@ -34,7 +34,7 @@ else:
 
 
 _NOWAIT = py.IIAPI_WAITPARM()
-_NOWAIT.wt_timeout = -1
+_NOWAIT.wt_timeout = 1
 
 
 def _IIapi_yield_to_OpenAPI( future ):
