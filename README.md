@@ -66,10 +66,11 @@ Ingres session tracing using **SET SERVER_TRACE** (or **SET TRACE POINT SC930**)
 set IIAPI_DEV_MODE=ON
 set LOGURU_LEVEL=TRACE
 set II_API_LOG=c:\temp\api.log
-set II_API_SET='printtrace; tracefile \\temp\\api_tracelog.log'
 set II_API_TRACE=5
-set II_GCA_LOG=c:\temp\gca.log
-set II_GCA_TRACE=6
+```
+To enable optional GCA trace messages to also be written to the API log file:
+```
+set II_API_SET='printtrace'
 ```
 
 ### Server-Side Ingres Tracing (in **sql**, Windows)
@@ -84,10 +85,11 @@ SET SERVER_TRACE ON WITH DETAIL, DIRECTORY='C:\temp\session_logs'
 export IIAPI_DEV_MODE=ON
 export LOGURU_LEVEL=TRACE
 export II_API_LOG=/tmp/api.log
-export II_API_SET='printtrace; tracefile /tmp/api_tracelog.log'
 export II_API_TRACE=5
-export II_GCA_LOG=/tmp/gca.log
-export II_GCA_TRACE=6
+```
+To enable optional GCA trace messages to also be written to the API log file:
+```
+export II_API_SET='printtrace'
 ```
 
 ### Server-Side Ingres Tracing (in **sql**, Linux/MacOS)
