@@ -23,6 +23,8 @@ apis2ph2.py  apiscomm.py  apisdata.py  apisparm.py  apisprrp.py  apisselc.py
 apisauto.py  apisconn.py  apiserr.py   apisprbr.py  apisrept.py  apissell.py
 apisblob.py  apiscopy.py  apisinit.py  apisprgt.py  apisroll.py
 
+There is also a Jupyter Notebook called **pyngres-demo-1.ipynb** that provides a walkthrough of using Pyngres. To actually run the Notebook you must have a running Ingres client and a running Jupyter server (see https://jupyter.org/install). 
+
 ## Running Example Code
 
 Our examples expect Python 3.6 or higher. However, if you prefer to use an
