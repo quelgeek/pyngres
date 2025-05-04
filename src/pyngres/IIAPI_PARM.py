@@ -576,6 +576,23 @@ class IIAPI_PREPCMTPARM(IIAPI_PARM):
     _fields_ = [('pr_genParm', IIAPI_GENPARM), ('pr_tranHandle', II_PTR)]
 
 
+class IIAPI_PROMPTPARM(IIAPI_PARM):
+    '''parameter block for prompt and tracing callbacks'''
+
+    _fields_ = [
+        ('pd_envHandle',II_PTR),
+        ('pd_connHandle',II_PTR),
+        ('pd_flags',II_LONG),
+        ('pd_timeout',II_LONG),
+        ('pd_msg_len',II_UINT2),
+        ('pd_message',II_STR),
+        ('pd_max_reply',II_UINT2),
+        ('pd_rep_flags',II_LONG),
+        ('pd_rep_len',II_UINT2),
+        ('pd_reply',II_STR),
+    ]
+
+
 class IIAPI_PUTCOLPARM(IIAPI_PARM):
     '''parameter block for IIapi_putColumns()'''
 
@@ -695,10 +712,10 @@ class IIAPI_SETENVPRMPARM(IIAPI_PARM):
     '''parameter block for IIapi_setEnvParam()'''
 
     _fields_ = [
-        ('se_envHandle', C.c_void_p),
-        ('se_paramID', C.c_int),
-        ('se_paramValue', C.c_void_p),
-        ('se_status', C.c_uint),
+        ('se_envHandle', II_PTR),
+        ('se_paramID', II_LONG),
+        ('se_paramValue', II_PTR),
+        ('se_status', IIAPI_STATUS),
     ]
 
 
