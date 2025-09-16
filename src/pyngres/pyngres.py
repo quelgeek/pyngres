@@ -246,10 +246,10 @@ def IIapi_getClosurePtr(object):
     return ptr
 
 
-def IIapi_getClosure(ptr):
+def IIapi_getClosure(ptr,closureType):
     '''return the Python object pointed to by C.c_void_p pointer'''
-    object = C.cast(ptr,C.POINTER(C.py_object))
-    closure = object.contents.value
+    object = C.cast(ptr,C.POINTER(closureType))
+    closure = object.contents
     return closure
 
 

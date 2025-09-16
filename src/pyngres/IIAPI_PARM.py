@@ -211,6 +211,8 @@ class IIAPI_COPYMAP(IIAPI_MEMBER):
         ('cp_dbmsDescr', C.POINTER(IIAPI_DESCRIPTOR)),
         ('cp_fileCount', II_INT2),
         ('cp_fileDescr', C.POINTER(IIAPI_FDATADESCR)),
+        ('cp_skip', II_LONG),
+        ('cp_filesize', II_LONG),
     ]
 
 

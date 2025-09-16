@@ -1,7 +1,11 @@
 # Pyngres
 
 Pyngres is a Python wrapper for the Actian Ingres/Vector/X OpenAPI. It is
-currently available for Windows, Linux, and Darwin.
+currently available for Windows, Linux, and Darwin. 
+
+Pyngres 0.5.0 is the
+latest release and supports all versions up to IIAPI_VERSION_11 as delivered
+with Ingres 12.0
 
 ## Installation
 
@@ -107,7 +111,7 @@ be completed. Ordinarily, using the bare-bones OpenAPI, that would mean
 it is up to the programmer to insert calls to `IIapi_wait()` 
 to pass control back to the OpenAPI so that it can set the gp_completed flag 
 and invoke any callback routine that was requested. Using pyngres.asyncio 
-instead with the Python asyncio features is much tidier.
+to make use of the Python asyncio features is much tidier.
 
 Python asyncio provides infrastructure and well-known design patterns that
 make asynchronous programming more convenient and supports
