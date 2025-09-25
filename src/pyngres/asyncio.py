@@ -16,6 +16,9 @@ from .IIAPI_PARM import *
 from pyngres import ( IIapi_convertData, IIapi_formatData, IIapi_getColumnInfo, 
     IIapi_getErrorInfo, IIapi_initialize, IIapi_registerXID, IIapi_releaseEnv, 
     IIapi_releaseXID, IIapi_setEnvParam, IIapi_terminate ) 
+##  the following function is asynchronous but can't be awaitable; it has to
+##  be checked with a busy-wait loop
+from pyngres import IIapi_catchEvent
 ##  import the callback helper functions
 from pyngres import ( IIapi_callback, IIapi_getCallbackPtr,
     IIapi_getClosurePtr, IIapi_getClosure ) 
@@ -81,11 +84,6 @@ def IIapi_batch(pcb):
 @_IIapi_awaitable
 def IIapi_cancel(pcb):
 	py.IIapi_cancel( pcb )
-
-
-@_IIapi_awaitable
-def IIapi_catchEvent(pcb):
-	py.IIapi_catchEvent( pcb )
 
 
 @_IIapi_awaitable
