@@ -19,6 +19,9 @@ pip install pyngres
 
 (Note for **Conda** and **Miniconda** users: there is an as-yet undiagnosed problem that prevents **pip** from properly resolving the dependency on **loguru**. As a workaround install loguru before installing pyngres.)
 
+## Documentation
+The primary documentation is the [Actian OpenAPI User Guide](https://docs.actian.com/actianingres/12.0/OpenAPIUser/OpenAPIUser_Title.htm#). Additional documentation highlighting the differences between using the Actian OpenAPI with C versus Python is available [here](http://pyngres-docs.duckdns.org), giving advice on debugging, and example solutions to common problems.
+
 ## Usage
 
 The pyngres package contains three modules. The base **pyngres** module is a set of
@@ -196,4 +199,5 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
 
