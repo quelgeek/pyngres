@@ -2,7 +2,7 @@
 
 ##  Copyright (c) 2026 Roy Hann
 
-##  Name: apiscopy.c 
+##  Name: apiscopy.py 
 ##  
 ##  Description:
 ##      Demonstrates using IIapi_query(), IIapi_getCopyMap(),
@@ -20,6 +20,27 @@
 from pyngres import *
 import ctypes
 import sys
+
+
+##  this SQL is different from that used in the C version of apiscopy. Here we
+##  declare name as CHAR(20) rather than VARCHAR(20) because VARCHARs add a
+##  complication that distracts from the essential point of the example
+createTBLText = (
+    b'CREATE TABLE api_demo_copy'
+    b'( '
+    b'name char(20), '
+    b'age i4'
+    b')' )
+
+sql_copyfrom = ( b'copy table api_demo_copy() from program' )
+sql_copyinto = ( b'copy table api_demo_copy() into program' )
+
+insTBLInfo = [  ( b'Abrham, Barbara T.', 35 ),
+                ( b'Haskins, Jill G.', 56 ),
+                ( b'Poon, Jennifer C.', 50 ),
+                ( b'Thurman, Roberta F.', 32 ),
+                ( b'Wilson, Frank N.', 24 ) ]
+DEMO_TABLE_SIZE = len(insTBLInfo)
 
 
 def IIdemo_init():
@@ -133,6 +154,8 @@ def IIdemo_query( connHandle, tranHandle, query ):
     return tranHandle
 
 
+##  this is the main body of the sample code
+
 argv = sys.argv
 script = argv[0]
 if len(argv) != 2:
@@ -145,30 +168,14 @@ target = dbtarget.encode()
 wtp = IIAPI_WAITPARM()
 wtp.wt_timeout = -1
 
-##  this SQL is different from that used in the C version of apiscopy. Here we
-##  declare name as CHAR(20) rather than VARCHAR(20) because VARCHARs add a
-##  complication that distracts from the essential point of the example
-sql_create = (
-    b'CREATE TABLE api_demo_copy'
-    b'( '
-    b'name char(20), '
-    b'age i4'
-    b')' )
-
-sql_copyfrom = ( b'copy table api_demo_copy() from program' )
-sql_copyinto = ( b'copy table api_demo_copy() into program' )
-
-insTBLInfo = [  ( b'Abrham, Barbara T.', 35 ),
-                ( b'Haskins, Jill G.', 56 ),
-                ( b'Poon, Jennifer C.', 50 ),
-                ( b'Thurman, Roberta F.', 32 ),
-                ( b'Wilson, Frank N.', 24 ) ]
-DEMO_TABLE_SIZE = len(insTBLInfo)
-
 IIdemo_init()
 connHandle = IIdemo_conn( target )
 tranHandle = None
-tranHandle = IIdemo_query( connHandle, tranHandle, sql_create )
+tranHandle = IIdemo_query( connHandle, tranHandle, createTBLText )
+
+##  Execute 'copy from' statement
+print( 'apiscopy: copy rows from program to table')
+
 qyp = IIAPI_QUERYPARM()
 qyp.qy_genParm.gp_callback = None
 qyp.qy_genParm.gp_closure = None
@@ -178,9 +185,11 @@ qyp.qy_queryText = sql_copyfrom
 qyp.qy_parameters = False
 qyp.qy_tranHandle = tranHandle
 qyp.qy_stmtHandle = None
+
 IIapi_query( qyp )
 while not qyp.qy_genParm.gp_completed:
     IIapi_wait( wtp )
+
 tranHandle = qyp.qy_tranHandle
 stmtHandle = qyp.qy_stmtHandle
 
@@ -198,6 +207,11 @@ pcp = IIAPI_PUTCOLPARM()
 dataBuffer = (IIAPI_DATAVALUE * 2)()
 
 for row in range(DEMO_TABLE_SIZE):
+    print( '\tinsert row')
+
+    var1 = ctypes.create_string_buffer(insTBLInfo[row][0])
+    var2 = ctypes.c_int(insTBLInfo[row][1])
+
     pcp.pc_genParm.gp_callback = None
     pcp.pc_genParm.gp_closure = None
     pcp.pc_stmtHandle = stmtHandle
@@ -206,34 +220,41 @@ for row in range(DEMO_TABLE_SIZE):
 
     pcp.pc_columnData = dataBuffer
     pcp.pc_columnData[0].dv_null = False
-    pcp.pc_columnData[0].dv_length = len(insTBLInfo[row][0])
-    var1 = ctypes.create_string_buffer(insTBLInfo[row][0])
-    pcp.pc_columnData[0].dv_value = ctypes.addressof( var1 ) 
+    pcp.pc_columnData[0].dv_length = ctypes.sizeof(var1)
+    pcp.pc_columnData[0].dv_value = ctypes.addressof(var1) 
 
     pcp.pc_columnData[1].dv_null = False
     pcp.pc_columnData[1].dv_length = ctypes.sizeof(ctypes.c_int)
-    var2 = ctypes.c_int(insTBLInfo[row][1])
     pcp.pc_columnData[1].dv_value = ctypes.addressof( var2 ) 
 
     IIapi_putColumns( pcp )
+
     while not pcp.pc_genParm.gp_completed:
         IIapi_wait( wtp )
 
+##  get copy results
 gqp = IIAPI_GETQINFOPARM()
 gqp.gq_genParm.gp_callback = None
 gqp.gq_genParm.gp_closure = None
 gqp.gq_stmtHandle = stmtHandle;
+
 IIapi_getQueryInfo( gqp );
+
 while not gqp.gq_genParm.gp_completed:
     IIapi_wait( wtp );
+
+##  free resources    
 clp = IIAPI_CLOSEPARM()
 clp.cl_genParm.gp_callback = None
 clp.cl_genParm.gp_closure = None
 clp.cl_stmtHandle = stmtHandle
+
 IIapi_close( clp );
+
 while not clp.cl_genParm.gp_completed:
     IIapi_wait( wtp );
 
+##  execute 'copy into' statement
 qyp.qy_genParm.gp_callback = None
 qyp.qy_genParm.gp_closure = None
 qyp.qy_connHandle = connHandle
@@ -242,61 +263,76 @@ qyp.qy_queryText = sql_copyinto
 qyp.qy_parameters = False
 qyp.qy_tranHandle = tranHandle
 qyp.qy_stmtHandle = None
+
 IIapi_query( qyp )
+
 while not qyp.qy_genParm.gp_completed:
     IIapi_wait( wtp )
+
 tranHandle = qyp.qy_tranHandle
 stmtHandle = qyp.qy_stmtHandle
 
-##  get the copy map
+##  get copy map describing copy data
 gmp = IIAPI_GETCOPYMAPPARM()
 gmp.gm_genParm.gp_callback = None
 gmp.gm_genParm.gp_closure = None
 gmp.gm_stmtHandle = stmtHandle
+
 IIapi_getCopyMap( gmp )
+
 while not gmp.gm_genParm.gp_completed:
     IIapi_wait( wtp )
 
+##  get rows from table
 gcp = IIAPI_GETCOLPARM()
-descriptorCount = gmp.gm_copyMap.cp_dbmsCount
 gcp.gc_genParm.gp_callback = None
 gcp.gc_genParm.gp_closure = None
 gcp.gc_rowCount = 1
 gcp.gc_columnCount = gmp.gm_copyMap.cp_dbmsCount
 gcp.gc_columnData = dataBuffer
-gcp.gc_columnData[0].dv_value = ctypes.addressof( var1 )
-gcp.gc_columnData[1].dv_value = ctypes.addressof( var2 )
+gcp.gc_columnData[0].dv_value = ctypes.addressof(var1)
+gcp.gc_columnData[1].dv_value = ctypes.addressof(var2)
 gcp.gc_stmtHandle = stmtHandle
 gcp.gc_moreSegments = 0
+
 while True:
-    IIapi_getColumns( gcp )
+    IIapi_getColumns(gcp)
+
     while not gcp.gc_genParm.gp_completed:
         IIapi_wait( wtp )
+
     status = gcp.gc_genParm.gp_status
     if status == IIAPI_ST_NO_DATA:
         break
 
-    print('\t {} = {}, {} = {}'.format(
+    print('\t{} = {}, {} = {}'.format(
         gmp.gm_copyMap.cp_dbmsDescr[0].ds_columnName.decode(),
         var1.value,
         gmp.gm_copyMap.cp_dbmsDescr[1].ds_columnName.decode(),
         var2.value))
 
+##  get copy results
 gqp.gq_genParm.gp_callback = None
 gqp.gq_genParm.gp_closure = None
 gqp.gq_stmtHandle = stmtHandle;
+
 IIapi_getQueryInfo( gqp );
+
 while not gqp.gq_genParm.gp_completed:
     IIapi_wait( wtp );
+
+## free resources
 clp = IIAPI_CLOSEPARM()
 clp.cl_genParm.gp_callback = None
 clp.cl_genParm.gp_closure = None
 clp.cl_stmtHandle = stmtHandle
+
 IIapi_close( clp );
+
 while not clp.cl_genParm.gp_completed:
     IIapi_wait( wtp );
 
-IIdemo_rollback( tranHandle )
-IIdemo_disconn( connHandle )
+IIdemo_rollback(tranHandle)
+IIdemo_disconn(connHandle)
 IIdemo_term()
 quit()
